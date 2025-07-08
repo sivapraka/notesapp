@@ -1,4 +1,4 @@
-package com.notesapp.ui
+package com.notesapp.ui.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -28,7 +28,7 @@ class MoviesScreen: ComponentActivity() {
     fun MovieScreen(viewModel: MovieViewModel = hiltViewModel()) {
         val movieState = viewModel.movieState.collectAsState()
 
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.Companion.padding(16.dp)) {
             Button(onClick = { viewModel.fetchMovie("Inception") }) {
                 Text("Fetch Movie")
             }

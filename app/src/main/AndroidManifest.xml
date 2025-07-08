@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotesApp"
         tools:targetApi="31">
-        <activity android:name=".ui.notes.NotesActivity"
+        <activity android:name=".ui.view.NotesActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.NotesApp.NoActionBar">
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.MoviesScreen"
+        <activity android:name=".ui.view.MoviesScreen"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.NotesApp.NoActionBar">

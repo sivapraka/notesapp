@@ -1,4 +1,4 @@
-package com.notesapp.ui.notes.noteslist
+package com.notesapp.ui.notes
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

@@ -1,4 +1,4 @@
-package com.notesapp.ui.notes.noteslist
+package com.notesapp.ui.notes
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
