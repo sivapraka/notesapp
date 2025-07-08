@@ -1,0 +1,29 @@
+com.example.noteapp
+│
+├── data                 # Database, Repositories
+│   ├── local
+│   │   ├── NoteDao.kt
+│   │   └── NoteDatabase.kt
+│   └── repository
+│       └── NoteRepositoryImpl.kt
+│
+├── domain               # Business logic
+│   ├── model
+│   │   └── Note.kt
+│   ├── repository
+│   │   └── NoteRepository.kt
+│   └── usecase
+│       └── GetNotesUseCase.kt
+│       └── AddNoteUseCase.kt
+│       └── DeleteNoteUseCase.kt
+│
+├── presentation         # UI Layer
+│   ├── note_list
+│   │   ├── NoteListViewModel.kt
+│   │   └── NoteListScreen.kt
+│   └── add_edit_note
+│       └── AddEditNoteViewModel.kt
+│       └── AddEditNoteScreen.kt
+│
+└── di                   # Dependency Injection
+    └── AppModule.kt
