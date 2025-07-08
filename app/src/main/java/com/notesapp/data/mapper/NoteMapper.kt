@@ -9,7 +9,7 @@ fun Note.toDomain(): Notes {
         id = id,
         title = title.toString(),
         description = description.toString(),
-        date = date.toString(),
+        date = date,
         upload = upload.toString()
     )
 }

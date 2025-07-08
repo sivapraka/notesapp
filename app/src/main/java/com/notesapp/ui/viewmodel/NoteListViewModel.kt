@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.notesapp.data.mapper.toDomain
 import com.notesapp.data.mapper.toEntity
 import com.notesapp.domain.model.Notes
+import com.notesapp.domain.model.NotesDataSource
 import com.notesapp.domain.usecase.NoteUseCase
+import com.notesapp.utils.toReadableDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,8 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : ViewModel() {
-    private val _notes = MutableStateFlow<List<Notes>>(emptyList())
-    val notes: StateFlow<List<Notes>> = _notes
+    private val _notes = MutableStateFlow<List<NotesDataSource>>(emptyList())
+    val notes: StateFlow<List<NotesDataSource>> = _notes
 
     init {
         viewModelScope.launch {
@@ -25,7 +27,14 @@ class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : 
 
     suspend fun loadNotes() {
         useCase.getNotesUseCase().collect { notes ->
-            _notes.value = notes.map { it.toDomain() }
+            val grouped = notes.map { it.toDomain() }
+                .groupBy { it.date.toReadableDate() }
+            val mergedList = mutableListOf<NotesDataSource>()
+            grouped.forEach { (date, notes) ->
+                mergedList.add(NotesDataSource.Header(date))
+                mergedList.addAll(notes.map { NotesDataSource.Item(it) })
+            }
+            _notes.value = mergedList
         }
     }
 

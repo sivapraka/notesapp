@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import com.notesapp.domain.model.Notes
 
 
+
 @Composable
 fun NoteItem(
     note: Notes
@@ -16,6 +17,8 @@ fun NoteItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .heightIn(min = 60.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
