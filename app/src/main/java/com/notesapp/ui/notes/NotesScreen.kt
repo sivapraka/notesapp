@@ -2,9 +2,11 @@ package com.notesapp.ui.notes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -16,6 +18,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -24,6 +30,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,9 +43,11 @@ import com.notesapp.R
 import com.notesapp.domain.model.NotesDataSource
 import com.notesapp.ui.components.AddNoteContent
 import com.notesapp.ui.components.EmptyNotesView
+import com.notesapp.ui.components.Loading
 import com.notesapp.ui.components.NoteItem
 import com.notesapp.ui.notes.state.NotesUiState
 import com.notesapp.ui.viewmodel.NoteListViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +59,8 @@ fun NoteListScreen(
     val sheetState = rememberModalBottomSheetState()
     var showSheet by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     if (showSheet) {
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },
@@ -64,6 +75,7 @@ fun NoteListScreen(
         }
     }
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             NotesTopAppBar(
                 searchQuery = searchQuery,
@@ -130,6 +142,16 @@ fun NoteListScreen(
                                     SwipeToDeleteContainer(
                                         onDelete = {
                                             viewModel.deleteNote(note.note.id)
+                                            scope.launch {
+                                                val result = snackbarHostState.showSnackbar(
+                                                    message = "Note deleted",
+                                                    actionLabel = "Undo",
+                                                    duration = SnackbarDuration.Short
+                                                )
+                                                if (result == SnackbarResult.ActionPerformed) {
+                                                    viewModel.restoreLastDeletedNote()
+                                                }
+                                            }
                                         }
                                     ) {
                                         NoteItem(note = note.note)
@@ -152,6 +174,16 @@ fun NoteListScreen(
                         text = state.message,
                         color = MaterialTheme.colorScheme.error
                     )
+                }
+            }
+            is NotesUiState.Adding -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Loading(modifier = Modifier.size(150.dp))
                 }
             }
         }

@@ -10,6 +10,7 @@ import com.notesapp.domain.usecase.NoteUseCase
 import com.notesapp.ui.notes.state.NotesUiState
 import com.notesapp.utils.toReadableDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,11 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : ViewModel() {
-    private val _notes = MutableStateFlow<List<NotesDataSource>>(emptyList())
-    val notes: StateFlow<List<NotesDataSource>> = _notes
     private val _uiState = MutableStateFlow<NotesUiState>(NotesUiState.Loading)
     val uiState: StateFlow<NotesUiState> = _uiState
-
+    private var lastDeletedNote: Notes? = null
     init {
         viewModelScope.launch {
             loadNotes()
@@ -38,7 +37,6 @@ class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : 
                     mergedList.add(NotesDataSource.Header(date))
                     mergedList.addAll(notes.map { NotesDataSource.Item(it) })
                 }
-                _notes.value = mergedList
                 _uiState.value = NotesUiState.Success(mergedList)
             }
         } catch (e: Exception) {
@@ -46,21 +44,40 @@ class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : 
         }
     }
 
-    fun addNote(title: String, content: String) {
-        viewModelScope.launch {
-            val note = Notes(
-                title = title,
-                description = content
-            )
-            // Save locally
-            useCase.addNotesUseCase(note.toEntity())
-            loadNotes()
+     fun addNote(title: String, content: String) {
+        _uiState.value = NotesUiState.Adding
+        try {
+            viewModelScope.launch {
+                delay(2000L)
+                val note = Notes(
+                    title = title,
+                    description = content
+                )
+                // Save locally
+                useCase.addNotesUseCase(note.toEntity())
+                loadNotes()
+            }
+        }catch (e: Exception)
+        {
+            _uiState.value = NotesUiState.Error("Failed to add note.")
         }
     }
 
     fun deleteNote(note: Int) {
         viewModelScope.launch {
+            lastDeletedNote = (_uiState.value as? NotesUiState.Success)?.notes.orEmpty()
+                .filterIsInstance<NotesDataSource.Item>().map { it.note }.firstOrNull { it.id == note }
             useCase.deleteNotesUseCase(note)
+
+        }
+    }
+    fun restoreLastDeletedNote() {
+        viewModelScope.launch {
+            lastDeletedNote?.let {
+                useCase.addNotesUseCase(it.toEntity())
+                loadNotes()
+                lastDeletedNote = null
+            }
         }
     }
 }
