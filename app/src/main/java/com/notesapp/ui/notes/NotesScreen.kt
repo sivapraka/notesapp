@@ -126,7 +126,7 @@ fun NoteListScreen(
                             .padding(paddingValues)
                             .background(color = colorResource(R.color.white))
                     ) {
-                        items(searchResult, key = { it.hashCode() }) { note ->
+                        items(searchResult, key = { it }) { note ->
                             when (note) {
                                 is NotesDataSource.Header -> {
                                     Text(

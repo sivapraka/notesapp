@@ -1,11 +1,9 @@
 package com.notesapp.di
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.notesapp.data.local.NoteDao
 import com.notesapp.data.local.NoteDatabase
 import com.notesapp.data.remote.ApiService
 import com.notesapp.data.remote.NetworkUtils
@@ -24,8 +22,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
