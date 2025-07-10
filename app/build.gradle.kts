@@ -73,8 +73,13 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
-
+    // Lottie & Image Loading
     implementation(libs.lottie.compose)
     implementation(libs.coil.compose)
+
+    //Security
+    implementation(libs.security.crypto)
+    implementation(libs.biometric)
+
 
 }
