@@ -1,6 +1,6 @@
 package com.notesapp.domain.usecase
 
-import com.notesapp.data.local.Note
+import com.notesapp.data.local.entity.Note
 
 import com.notesapp.domain.repository.NoteRepository
 

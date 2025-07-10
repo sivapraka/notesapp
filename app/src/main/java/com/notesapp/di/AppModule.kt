@@ -37,8 +37,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNoteRepository(db: NoteDatabase,apiService: ApiService,networkUtil: NetworkUtils): NoteRepository {
-        return NoteRepositoryImpl(db.noteDao(),apiService,networkUtil)
+    fun provideNoteRepository(
+        db: NoteDatabase,
+        apiService: ApiService,
+        networkUtil: NetworkUtils
+    ): NoteRepository {
+        return NoteRepositoryImpl(db.noteDao(), apiService, networkUtil)
     }
 
     @Provides
@@ -70,8 +74,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(api: MoviesApi): MovieRepository {
-        return MovieRepositoryImpl(api, apiKey = "5127029d")
+    fun provideMovieRepository(db: NoteDatabase, api: MoviesApi): MovieRepository {
+        return MovieRepositoryImpl(db.movieDao(), api, apiKey = "5127029d")
     }
 
     @Provides

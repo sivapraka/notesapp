@@ -75,6 +75,6 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     implementation(libs.lottie.compose)
-
+    implementation(libs.coil.compose)
 
 }

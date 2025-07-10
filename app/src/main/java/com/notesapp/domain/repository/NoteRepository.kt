@@ -1,11 +1,9 @@
 package com.notesapp.domain.repository
 
-import com.notesapp.data.local.Note
-import com.notesapp.data.remote.ApiService
-import com.notesapp.data.remote.NetworkUtils
+import com.notesapp.data.local.entity.Note
 import kotlinx.coroutines.flow.Flow
 
-interface NoteRepository{
+interface NoteRepository {
     suspend fun getNotes(): Flow<List<Note>>
     suspend fun insertNote(note: Note)
     suspend fun deleteNote(note: Note)

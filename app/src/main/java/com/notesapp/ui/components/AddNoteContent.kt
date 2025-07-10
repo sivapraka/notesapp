@@ -24,7 +24,6 @@ fun AddNoteContent(
     onAdd: (String, String) -> Unit
 
 ) {
-    val context = LocalContext.current
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
     var showTitleError by remember { mutableStateOf(false) }

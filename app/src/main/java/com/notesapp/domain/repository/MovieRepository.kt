@@ -1,8 +1,8 @@
 package com.notesapp.domain.repository
 
-import com.notesapp.domain.model.Movie
+import com.notesapp.data.remote.MovieResponse
 
 interface MovieRepository {
 
-    suspend fun getMovie(title: String): Movie
+    suspend fun getMovie(title: String): MovieResponse
 }

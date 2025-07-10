@@ -1,6 +1,6 @@
 package com.notesapp.data.mapper
 
-import com.notesapp.data.local.Note
+import com.notesapp.data.local.entity.Note
 import com.notesapp.domain.model.Notes
 
 // Convert Room entity to domain model
@@ -15,7 +15,7 @@ fun Note.toDomain(): Notes {
 }
 
 // Convert domain model to Room entity
-fun Notes.toEntity(): Note{
+fun Notes.toEntity(): Note {
     return Note(
         id = id, title = title, description = description, date = date,
         upload = upload

@@ -2,7 +2,7 @@ package com.notesapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.notesapp.domain.model.Movie
+import com.notesapp.data.remote.MovieResponse
 import com.notesapp.domain.usecase.GetMovieUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,8 +16,8 @@ class MovieViewModel @Inject constructor(
     private val getMovieUseCase: GetMovieUseCase
 ) : ViewModel() {
 
-    private val _movieState = MutableStateFlow<Result<Movie>?>(null)
-    val movieState: StateFlow<Result<Movie>?> = _movieState
+    private val _movieState = MutableStateFlow<Result<MovieResponse>?>(null)
+    val movieState: StateFlow<Result<MovieResponse>?> = _movieState
 
     fun fetchMovie(title: String) {
         viewModelScope.launch {

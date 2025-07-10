@@ -13,7 +13,7 @@ import com.notesapp.ui.notes.NoteListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class NotesActivity: ComponentActivity() {
+class NotesActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

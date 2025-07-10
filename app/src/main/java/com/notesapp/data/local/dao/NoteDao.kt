@@ -1,4 +1,4 @@
-package com.notesapp.data.local
+package com.notesapp.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.notesapp.data.local.entity.Note
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,10 +21,10 @@ interface NoteDao {
     suspend fun insertAll(vararg notes: Note)
 
     @Delete
-   suspend fun delete(note: Note)
+    suspend fun delete(note: Note)
 
     @Update
-    suspend  fun update(note: Note)
+    suspend fun update(note: Note)
 
     @Query("DELETE FROM note WHERE id = :id")
     suspend fun deleteNoteById(id: Int)

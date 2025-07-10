@@ -21,6 +21,7 @@ class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : 
     private val _uiState = MutableStateFlow<NotesUiState>(NotesUiState.Loading)
     val uiState: StateFlow<NotesUiState> = _uiState
     private var lastDeletedNote: Notes? = null
+
     init {
         viewModelScope.launch {
             loadNotes()
@@ -44,7 +45,7 @@ class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : 
         }
     }
 
-     fun addNote(title: String, content: String) {
+    fun addNote(title: String, content: String) {
         _uiState.value = NotesUiState.Adding
         try {
             viewModelScope.launch {
@@ -57,8 +58,7 @@ class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : 
                 useCase.addNotesUseCase(note.toEntity())
                 loadNotes()
             }
-        }catch (e: Exception)
-        {
+        } catch (e: Exception) {
             _uiState.value = NotesUiState.Error("Failed to add note.")
         }
     }
@@ -66,11 +66,13 @@ class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : 
     fun deleteNote(note: Int) {
         viewModelScope.launch {
             lastDeletedNote = (_uiState.value as? NotesUiState.Success)?.notes.orEmpty()
-                .filterIsInstance<NotesDataSource.Item>().map { it.note }.firstOrNull { it.id == note }
+                .filterIsInstance<NotesDataSource.Item>().map { it.note }
+                .firstOrNull { it.id == note }
             useCase.deleteNotesUseCase(note)
 
         }
     }
+
     fun restoreLastDeletedNote() {
         viewModelScope.launch {
             lastDeletedNote?.let {

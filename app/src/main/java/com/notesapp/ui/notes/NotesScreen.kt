@@ -2,7 +2,6 @@ package com.notesapp.ui.notes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -126,7 +125,7 @@ fun NoteListScreen(
                             .padding(paddingValues)
                             .background(color = colorResource(R.color.white))
                     ) {
-                        items(searchResult, key = { it }) { note ->
+                        items(searchResult) { note ->
                             when (note) {
                                 is NotesDataSource.Header -> {
                                     Text(
@@ -176,6 +175,7 @@ fun NoteListScreen(
                     )
                 }
             }
+
             is NotesUiState.Adding -> {
                 Box(
                     modifier = Modifier

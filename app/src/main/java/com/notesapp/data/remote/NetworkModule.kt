@@ -34,8 +34,18 @@ object NetworkModule {
             // Create a trust manager that does not validate certificate chains
             val trustAllCerts = arrayOf<TrustManager>(
                 object : X509TrustManager {
-                    override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
-                    override fun checkServerTrusted(chain: Array<X509Certificate>, authType: String) {}
+                    override fun checkClientTrusted(
+                        chain: Array<X509Certificate>,
+                        authType: String
+                    ) {
+                    }
+
+                    override fun checkServerTrusted(
+                        chain: Array<X509Certificate>,
+                        authType: String
+                    ) {
+                    }
+
                     override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
                 }
             )
@@ -58,16 +68,16 @@ object NetworkModule {
         }
     }
 
-/*
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(): OkHttpClient =
-        OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .addInterceptor(logging)
-            .build()
-*/
+    /*
+        @Provides
+        @Singleton
+        fun provideOkHttpClient(): OkHttpClient =
+            OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor(logging)
+                .build()
+    */
 
 
     @Provides

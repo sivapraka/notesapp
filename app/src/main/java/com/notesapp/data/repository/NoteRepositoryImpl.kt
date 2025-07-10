@@ -1,13 +1,11 @@
 package com.notesapp.data.repository
 
-import android.content.Context
-import com.notesapp.data.local.Note
-import com.notesapp.data.local.NoteDao
+import com.notesapp.data.local.dao.NoteDao
+import com.notesapp.data.local.entity.Note
 import com.notesapp.data.mapper.toDomain
 import com.notesapp.data.remote.ApiService
 import com.notesapp.data.remote.NetworkUtils
 import com.notesapp.domain.repository.NoteRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
