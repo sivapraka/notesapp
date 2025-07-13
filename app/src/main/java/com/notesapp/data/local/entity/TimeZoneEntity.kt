@@ -7,5 +7,6 @@ import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "timezone")
 data class TimeZoneEntity(
-    @SerializedName("iso_3166_1") @PrimaryKey val isoCode: String, // e.g., "AU", "AT"
+    @SerializedName("iso_3166_1") @PrimaryKey val iso_3166_1: String,
+    @SerializedName("zones") val zones: List<String>
 )

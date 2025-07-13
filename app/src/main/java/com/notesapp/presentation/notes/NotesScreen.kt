@@ -1,49 +1,27 @@
 package com.notesapp.presentation.notes
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.notesapp.R
+
 import com.notesapp.domain.model.NotesDataSource
-import com.notesapp.presentation.components.AddNoteContent
-import com.notesapp.presentation.components.EmptyNotesView
-import com.notesapp.presentation.components.Loading
-import com.notesapp.presentation.components.NoteItem
+import com.notesapp.presentation.components.*
 import com.notesapp.presentation.notes.state.NotesUiState
 import com.notesapp.presentation.viewmodel.NoteListViewModel
 import kotlinx.coroutines.launch
@@ -53,13 +31,15 @@ import kotlinx.coroutines.launch
 fun NoteListScreen(
     viewModel: NoteListViewModel = hiltViewModel()
 ) {
-    //  val notes by viewModel.notes.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
     val sheetState = rememberModalBottomSheetState()
     var showSheet by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    val refreshing by viewModel.isRefreshing.collectAsState()
+    val pullRefreshState = rememberPullToRefreshState()
     if (showSheet) {
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },
@@ -120,45 +100,53 @@ fun NoteListScreen(
                             }
                         }
                     }
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                            .background(color = colorResource(R.color.white))
+                    PullToRefreshBox(
+                        state = pullRefreshState,
+                        isRefreshing = refreshing,
+                        onRefresh = { viewModel.refreshNotes() },
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        items(searchResult) { note ->
-                            when (note) {
-                                is NotesDataSource.Header -> {
-                                    Text(
-                                        text = note.title,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .background(Color.LightGray)
-                                            .padding(8.dp)
-                                    )
-                                }
+                        LazyColumn(
+                            modifier = Modifier
+                                .padding(paddingValues)
+                                .background(color = colorResource(R.color.white))
+                        ) {
+                            items(searchResult) { note ->
+                                when (note) {
+                                    is NotesDataSource.Header -> {
+                                        Text(
+                                            text = note.title,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(Color.LightGray)
+                                                .padding(8.dp)
+                                        )
+                                    }
 
-                                is NotesDataSource.Item -> {
-                                    SwipeToDeleteContainer(
-                                        onDelete = {
-                                            viewModel.deleteNote(note.note.id)
-                                            scope.launch {
-                                                val result = snackbarHostState.showSnackbar(
-                                                    message = "Note deleted",
-                                                    actionLabel = "Undo",
-                                                    duration = SnackbarDuration.Short
-                                                )
-                                                if (result == SnackbarResult.ActionPerformed) {
-                                                    viewModel.restoreLastDeletedNote()
+                                    is NotesDataSource.Item -> {
+                                        SwipeToDeleteContainer(
+                                            onDelete = {
+                                                viewModel.deleteNote(note.note.id)
+                                                scope.launch {
+                                                    val result = snackbarHostState.showSnackbar(
+                                                        message = "Note deleted",
+                                                        actionLabel = "Undo",
+                                                        duration = SnackbarDuration.Short
+                                                    )
+                                                    if (result == SnackbarResult.ActionPerformed) {
+                                                        viewModel.restoreLastDeletedNote()
+                                                    }
                                                 }
                                             }
+                                        ) {
+                                            NoteItem(note = note.note)
                                         }
-                                    ) {
-                                        NoteItem(note = note.note)
                                     }
                                 }
                             }
                         }
                     }
+
                 }
             }
 

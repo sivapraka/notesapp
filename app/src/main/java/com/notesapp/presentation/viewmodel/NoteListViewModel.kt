@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +22,8 @@ class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : 
     private val _uiState = MutableStateFlow<NotesUiState>(NotesUiState.Loading)
     val uiState: StateFlow<NotesUiState> = _uiState
     private var lastDeletedNote: Notes? = null
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
     init {
         viewModelScope.launch {
@@ -28,18 +31,27 @@ class NoteListViewModel @Inject constructor(private val useCase: NoteUseCase) : 
         }
     }
 
+    fun refreshNotes() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            delay(1500) // Simulate API call
+            loadNotes()
+            _isRefreshing.value = false
+        }
+    }
+
     suspend fun loadNotes() {
         try {
-            useCase.getNotesUseCase().collect { notes ->
-                val grouped = notes.map { it.toDomain() }
-                    .groupBy { it.date.toReadableDate() }
-                val mergedList = mutableListOf<NotesDataSource>()
-                grouped.forEach { (date, notes) ->
-                    mergedList.add(NotesDataSource.Header(date))
-                    mergedList.addAll(notes.map { NotesDataSource.Item(it) })
-                }
-                _uiState.value = NotesUiState.Success(mergedList)
+            val notes = useCase.getNotesUseCase().first() // <-- Only get latest snapshot
+            val grouped = notes.map { it.toDomain() }
+                .groupBy { it.date.toReadableDate() }
+            val mergedList = mutableListOf<NotesDataSource>()
+            grouped.forEach { (date, notesForDate) ->
+                mergedList.add(NotesDataSource.Header(date))
+                mergedList.addAll(notesForDate.map { NotesDataSource.Item(it) })
             }
+            _uiState.value = NotesUiState.Success(mergedList)
+
         } catch (e: Exception) {
             _uiState.value = NotesUiState.Error("Failed to load notes.")
         }

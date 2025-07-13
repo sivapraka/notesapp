@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.biometric)
     //Gson
     implementation (libs.gson)
-
+    //icons
+    implementation(libs.material.icons.extended)
 
 }
