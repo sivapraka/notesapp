@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     // Existing plugins
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.hilt) // ✅ Add this
+    alias(libs.plugins.hilt)
     kotlin("kapt") // Required for annotation processing
 }
 
@@ -17,7 +17,7 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
+        buildConfigField("String", "TMDB_API_KEY", "\"${property("TMDB_API_KEY")}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -40,6 +40,7 @@ android {
     buildFeatures {
         viewBinding = true
         compose = true
+        buildConfig=true
     }
 
 }
@@ -80,6 +81,8 @@ dependencies {
     //Security
     implementation(libs.security.crypto)
     implementation(libs.biometric)
+    //Gson
+    implementation (libs.gson)
 
 
 }

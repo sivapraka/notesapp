@@ -3,9 +3,9 @@ package com.notesapp.data.repository
 import com.notesapp.data.local.dao.NoteDao
 import com.notesapp.data.local.entity.Note
 import com.notesapp.data.mapper.toDomain
-import com.notesapp.data.remote.ApiService
-import com.notesapp.data.remote.NetworkUtils
+import com.notesapp.data.remote.api.ApiService
 import com.notesapp.domain.repository.NoteRepository
+import com.notesapp.util.NetworkUtils
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

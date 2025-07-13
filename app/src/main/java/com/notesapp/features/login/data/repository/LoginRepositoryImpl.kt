@@ -1,7 +1,6 @@
 package com.notesapp.features.login.data.repository
 
 
-import android.content.Context
 import com.notesapp.features.login.data.local.EncryptedPrefs
 import com.notesapp.features.login.data.model.LoginRequestDto
 import com.notesapp.features.login.data.remote.AuthService

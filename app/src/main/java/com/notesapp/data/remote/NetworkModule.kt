@@ -1,6 +1,8 @@
 package com.notesapp.data.remote
 
+import com.notesapp.data.remote.api.ApiService
 import com.notesapp.data.remote.api.MoviesApi
+import com.notesapp.di.UnsafeClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +23,6 @@ import javax.net.ssl.X509TrustManager
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    //private const val BASE_URL = "https://your.api.com/" // Replace with your real URL
     private const val BASE_URL = "https://www.omdbapi.com/"
     val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
@@ -29,6 +30,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @UnsafeClient
     fun getUnsafeOkHttpClient(): OkHttpClient {
         try {
             // Create a trust manager that does not validate certificate chains
@@ -68,21 +70,11 @@ object NetworkModule {
         }
     }
 
-    /*
-        @Provides
-        @Singleton
-        fun provideOkHttpClient(): OkHttpClient =
-            OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(logging)
-                .build()
-    */
-
 
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient): Retrofit =
+    @UnsafeClient
+    fun provideRetrofit(@UnsafeClient client: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
@@ -91,12 +83,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService =
+    fun provideApiService(@UnsafeClient retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
 
     @Provides
     @Singleton
-    fun provideMoviesApi(retrofit: Retrofit): MoviesApi {
+    fun provideMoviesApi(@UnsafeClient retrofit: Retrofit): MoviesApi {
         return retrofit.create(MoviesApi::class.java)
     }
 }

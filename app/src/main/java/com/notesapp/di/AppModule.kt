@@ -5,18 +5,23 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.notesapp.data.local.NoteDatabase
-import com.notesapp.data.remote.ApiService
-import com.notesapp.data.remote.NetworkUtils
+import com.notesapp.data.local.dao.LanguageDao
+import com.notesapp.data.remote.ImdbApi
+import com.notesapp.data.remote.api.ApiService
 import com.notesapp.data.remote.api.MoviesApi
 import com.notesapp.data.repository.MovieRepositoryImpl
 import com.notesapp.data.repository.NoteRepositoryImpl
+import com.notesapp.data.repository.TimezoneRepositoryImpl
 import com.notesapp.domain.repository.MovieRepository
 import com.notesapp.domain.repository.NoteRepository
+import com.notesapp.domain.repository.TimezoneRepository
 import com.notesapp.domain.usecase.AddNotesUseCase
 import com.notesapp.domain.usecase.DeleteNotesUseCase
 import com.notesapp.domain.usecase.GetMovieUseCase
 import com.notesapp.domain.usecase.GetNotesUseCase
+import com.notesapp.domain.usecase.GetTimezonesUseCase
 import com.notesapp.domain.usecase.NoteUseCase
+import com.notesapp.util.NetworkUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -65,12 +70,6 @@ object AppModule {
         ).build()
     }
 
-    val MIGRATION_1_2 = object : Migration(1, 2) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            // Add the new column with a default value
-            database.execSQL("ALTER TABLE notes ADD COLUMN timestamp INTEGER NOT NULL DEFAULT 0")
-        }
-    }
 
     @Provides
     @Singleton
@@ -84,5 +83,22 @@ object AppModule {
         return GetMovieUseCase(repository)
     }
 
+    @Provides
+    @Singleton
+    fun provideLanguageDao(db: NoteDatabase): LanguageDao {
+        return db.languageDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTimeZoneRepository(db: NoteDatabase, api: ImdbApi): TimezoneRepository {
+        return TimezoneRepositoryImpl(db.timeZoneDao(), api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetTimeZoneUseCase(repository: TimezoneRepository): GetTimezonesUseCase {
+        return GetTimezonesUseCase(repository)
+    }
 
 }

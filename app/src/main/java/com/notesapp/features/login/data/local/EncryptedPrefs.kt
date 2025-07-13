@@ -2,9 +2,9 @@ package com.notesapp.features.login.data.local
 
 
 import android.content.Context
+import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import androidx.core.content.edit
 
 class EncryptedPrefs(context: Context) {
 
