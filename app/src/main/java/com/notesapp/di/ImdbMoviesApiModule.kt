@@ -26,17 +26,34 @@ import javax.net.ssl.X509TrustManager
 @InstallIn(SingletonComponent::class)
 object ImdbMoviesApiModule {
 
-    private const val BASE_URL = "https://api.themoviedb.org/3/"
     private const val Token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMWYyNGUzZGMzNDQ0YjM4ZTUzNzk5OWY3NzFiNTViNiIsIm5iZiI6MTYwODE5NjU4Ny4zNzYsInN1YiI6IjVmZGIyMWViZWRhNGI3MDAzZTQwNWU3OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Zqy4ZYdGOvT26tomFRkMKTAqEQfBmx_DU0hJBkLzDh8"
-    private const val API_KEY = "21f24e3dc3444b38e537999f771b55b6" // Replace this with your real key
 
     @Provides
     @Singleton
+    @ApiKey
     fun provideApiKey(): String = BuildConfig.TMDB_API_KEY
+
+    @Provides
+    @Singleton
+    @BaseUrl
+    fun provideBaseUrl(): String = BuildConfig.BASE_URL
+
+
     @Provides
     @Singleton
     @AuthClient
-    fun OkHttpClient(apiKey: String): OkHttpClient {
+    fun provideRetrofit(@AuthClient client: OkHttpClient,@BaseUrl baseUrl: String): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @AuthClient
+    fun OkHttpClient(@ApiKey apiKey: String): OkHttpClient {
         // Trust all certificates
         val trustAllCerts = arrayOf<TrustManager>(
             object : X509TrustManager {
@@ -97,16 +114,7 @@ object ImdbMoviesApiModule {
             .build()
     }
 
-    @Provides
-    @Singleton
-    @AuthClient
-    fun provideRetrofit(@AuthClient client: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
+
 
     @Provides
     @Singleton

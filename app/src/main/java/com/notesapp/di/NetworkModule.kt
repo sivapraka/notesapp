@@ -1,8 +1,7 @@
-package com.notesapp.data.remote
+package com.notesapp.di
 
 import com.notesapp.data.remote.api.ApiService
 import com.notesapp.data.remote.api.MoviesApi
-import com.notesapp.di.UnsafeClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

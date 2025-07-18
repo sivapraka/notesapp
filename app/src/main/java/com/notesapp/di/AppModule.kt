@@ -2,16 +2,17 @@ package com.notesapp.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.notesapp.data.local.NoteDatabase
+import com.notesapp.data.local.Database
+import com.notesapp.data.local.dao.ImdbMoviesDao
 import com.notesapp.data.local.dao.LanguageDao
 import com.notesapp.data.remote.ImdbApi
 import com.notesapp.data.remote.api.ApiService
 import com.notesapp.data.remote.api.MoviesApi
+import com.notesapp.data.repository.ImdbMovieRepositoryImpl
 import com.notesapp.data.repository.MovieRepositoryImpl
 import com.notesapp.data.repository.NoteRepositoryImpl
 import com.notesapp.data.repository.TimezoneRepositoryImpl
+import com.notesapp.domain.repository.ImdbMovieRepository
 import com.notesapp.domain.repository.MovieRepository
 import com.notesapp.domain.repository.NoteRepository
 import com.notesapp.domain.repository.TimezoneRepository
@@ -43,7 +44,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideNoteRepository(
-        db: NoteDatabase,
+        db: Database,
         apiService: ApiService,
         networkUtil: NetworkUtils
     ): NoteRepository {
@@ -62,10 +63,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNoteDatabase(@ApplicationContext context: Context): NoteDatabase {
+    fun provideNoteDatabase(@ApplicationContext context: Context): Database {
         return Room.databaseBuilder(
             context,
-            NoteDatabase::class.java,
+            Database::class.java,
             "note_db"
         ).build()
     }
@@ -73,7 +74,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(db: NoteDatabase, api: MoviesApi): MovieRepository {
+    fun provideMovieRepository(db: Database, api: MoviesApi): MovieRepository {
         return MovieRepositoryImpl(db.movieDao(), api, apiKey = "5127029d")
     }
 
@@ -85,13 +86,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLanguageDao(db: NoteDatabase): LanguageDao {
+    fun provideLanguageDao(db: Database): LanguageDao {
         return db.languageDao()
     }
 
     @Provides
     @Singleton
-    fun provideTimeZoneRepository(db: NoteDatabase, api: ImdbApi): TimezoneRepository {
+    fun provideTimeZoneRepository(db: Database, api: ImdbApi): TimezoneRepository {
         return TimezoneRepositoryImpl(db.timeZoneDao(), api)
     }
 
@@ -99,6 +100,25 @@ object AppModule {
     @Singleton
     fun provideGetTimeZoneUseCase(repository: TimezoneRepository): GetTimezonesUseCase {
         return GetTimezonesUseCase(repository)
+    }
+
+    // DAO
+    @Provides
+    fun provideImdbMoviesDao(db: Database): ImdbMoviesDao {
+        return db.imdbMoviesDao()
+    }
+
+    // Repository
+    @Provides
+    @Singleton
+    fun provideImdbRepository(
+        dao: ImdbMoviesDao,
+        api: ImdbApi
+    ): ImdbMovieRepository {
+        return ImdbMovieRepositoryImpl(
+            moviesDao = dao,
+            api = api
+        )
     }
 
 }

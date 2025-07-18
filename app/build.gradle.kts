@@ -18,6 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "TMDB_API_KEY", "\"${property("TMDB_API_KEY")}\"")
+        buildConfigField("String", "BASE_URL", "\"${property("BASE_URL")}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -86,4 +87,6 @@ dependencies {
     //icons
     implementation(libs.material.icons.extended)
 
+    implementation(libs.paging.compose)
+    implementation(libs.room.paging)
 }

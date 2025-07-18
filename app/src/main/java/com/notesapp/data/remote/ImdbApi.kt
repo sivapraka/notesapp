@@ -2,9 +2,11 @@ package com.notesapp.data.remote
 
 import com.notesapp.data.local.entity.LanguageEntity
 import com.notesapp.data.local.entity.TimeZoneEntity
+import com.notesapp.data.model.ImdbMovieResponse
 import com.notesapp.domain.model.RequestTokenResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ImdbApi {
     @POST("auth/request_token")
@@ -16,5 +18,13 @@ interface ImdbApi {
     @GET("configuration/timezones")
     suspend fun getTimeZone(): List<TimeZoneEntity>
 
+    @GET("discover/movie")
+    suspend fun discoverMovies(
+        @Query("language") language: String = "ta",
+        @Query("include_adult") includeAdult: Boolean = false,
+        @Query("include_video") includeVideo: Boolean = false,
+        @Query("page") page: Int,
+        @Query("sort_by") sortBy: String = "popularity.desc",
+    ): ImdbMovieResponse
     ///discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc
 }
