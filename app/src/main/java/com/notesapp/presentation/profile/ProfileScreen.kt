@@ -24,6 +24,7 @@ import coil.compose.AsyncImage
 import com.notesapp.BuildConfig
 import com.notesapp.data.local.entity.ImdbMovies
 import com.notesapp.presentation.viewmodel.ImdbMoviesViewModel
+import com.notesapp.util.ImageUrlProviders
 
 @Composable
 fun ProfileScreen() {
@@ -85,7 +86,7 @@ fun MovieCardDetails(movie: ImdbMovies) {
             .width(180.dp)
     ) {
         Box {
-            val imageurl = "${BuildConfig.Image_URL}${movie.poster_path!!}"
+            val imageurl = "${ImageUrlProviders.basePosterUrl}${movie.poster_path!!}"
             AsyncImage(
                 model = imageurl,
                 contentDescription = movie.title,

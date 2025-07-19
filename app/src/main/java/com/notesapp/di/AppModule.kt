@@ -3,15 +3,19 @@ package com.notesapp.di
 import android.content.Context
 import androidx.room.Room
 import com.notesapp.data.local.Database
+import com.notesapp.data.local.dao.ImageConfigDao
 import com.notesapp.data.local.dao.ImdbMoviesDao
+import com.notesapp.data.local.dao.KeyConfigDao
 import com.notesapp.data.local.dao.LanguageDao
 import com.notesapp.data.remote.ImdbApi
 import com.notesapp.data.remote.api.ApiService
 import com.notesapp.data.remote.api.MoviesApi
+import com.notesapp.data.repository.ImdbConfigRepositoryImpl
 import com.notesapp.data.repository.ImdbMovieRepositoryImpl
 import com.notesapp.data.repository.MovieRepositoryImpl
 import com.notesapp.data.repository.NoteRepositoryImpl
 import com.notesapp.data.repository.TimezoneRepositoryImpl
+import com.notesapp.domain.repository.ImdbConfigRepository
 import com.notesapp.domain.repository.ImdbMovieRepository
 import com.notesapp.domain.repository.MovieRepository
 import com.notesapp.domain.repository.NoteRepository
@@ -111,14 +115,25 @@ object AppModule {
     // Repository
     @Provides
     @Singleton
-    fun provideImdbRepository(
-        dao: ImdbMoviesDao,
-        api: ImdbApi
-    ): ImdbMovieRepository {
-        return ImdbMovieRepositoryImpl(
-            moviesDao = dao,
-            api = api
-        )
+    fun provideImdbRepository(dao: ImdbMoviesDao, api: ImdbApi): ImdbMovieRepository {
+        return ImdbMovieRepositoryImpl(moviesDao = dao, api = api)
     }
 
+    // DAO
+    @Provides
+    fun provideImageConfigMoviesDao(db: Database): ImageConfigDao {
+        return db.imageConfigDao()
+    }
+
+    // DAO
+    @Provides
+    fun provideKeyConfigMoviesDao(db: Database): KeyConfigDao {
+        return db.keyConfigDao()
+    }
+    // Repository
+    @Provides
+    @Singleton
+    fun provideImdbImageConfigRepository(dao: ImageConfigDao,dao1: KeyConfigDao, api: ImdbApi): ImdbConfigRepository {
+        return ImdbConfigRepositoryImpl(imageConfigDao=dao,keyConfigDao = dao1, api = api)
+    }
 }

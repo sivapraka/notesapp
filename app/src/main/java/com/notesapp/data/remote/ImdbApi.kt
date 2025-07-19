@@ -2,6 +2,7 @@ package com.notesapp.data.remote
 
 import com.notesapp.data.local.entity.LanguageEntity
 import com.notesapp.data.local.entity.TimeZoneEntity
+import com.notesapp.data.mapper.ConfigResponse
 import com.notesapp.data.model.ImdbMovieResponse
 import com.notesapp.domain.model.RequestTokenResponse
 import retrofit2.http.GET
@@ -26,5 +27,7 @@ interface ImdbApi {
         @Query("page") page: Int,
         @Query("sort_by") sortBy: String = "popularity.desc",
     ): ImdbMovieResponse
-    ///discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc
+
+    @GET("configuration")
+    suspend fun configuration(): ConfigResponse
 }

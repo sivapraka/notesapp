@@ -19,9 +19,7 @@ android {
         versionName = "1.0"
         buildConfigField("String", "TMDB_API_KEY", "\"${property("TMDB_API_KEY")}\"")
         buildConfigField("String", "BASE_URL", "\"${property("BASE_URL")}\"")
-        buildConfigField("String", "Image_URL", "\"${property("Image_URL")}\"")
-        buildConfigField("String", "Image_URL_w400", "\"${property("Image_URL_w400")}\"")
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {

@@ -1,6 +1,7 @@
 package com.notesapp.di
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.notesapp.BuildConfig
 import com.notesapp.data.remote.ImdbApi
 import dagger.Module
@@ -43,6 +44,7 @@ object ImdbMoviesApiModule {
     @Singleton
     @AuthClient
     fun provideRetrofit(@AuthClient client: OkHttpClient,@BaseUrl baseUrl: String): Retrofit {
+        Log.e("TAG", "provideRetrofit: "+baseUrl )
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(client)
