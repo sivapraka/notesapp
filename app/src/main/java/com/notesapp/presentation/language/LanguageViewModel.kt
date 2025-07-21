@@ -9,9 +9,13 @@ import com.notesapp.data.local.entity.LanguageEntity
 import com.notesapp.domain.usecase.GetLanguageUseCase
 import com.notesapp.domain.usecase.RefreshLanguagesUseCase
 import com.notesapp.util.ApiResource
+import com.notesapp.util.network.NetworkConnectivityObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,13 +23,21 @@ import javax.inject.Inject
 @HiltViewModel
 class LanguageViewModel @Inject constructor(
     private val getLanguagesUseCase: GetLanguageUseCase,
-    private val refreshLanguagesUseCase: RefreshLanguagesUseCase
+    private val refreshLanguagesUseCase: RefreshLanguagesUseCase,
+    networkObserver: NetworkConnectivityObserver
 ) : ViewModel() {
     private var _languages =
         MutableStateFlow<ApiResource<List<LanguageEntity>>>(ApiResource.Loading)
     var languages: StateFlow<ApiResource<List<LanguageEntity>>> = _languages
   /*  private var _country = MutableStateFlow(Locale.getDefault().displayCountry) // or "Bengaluru"
     var country: StateFlow<String> = _country*/
+  val isOnline: StateFlow<Boolean> = networkObserver.networkStatus
+      .map { it == NetworkConnectivityObserver.Status.Available }
+      .stateIn(
+          viewModelScope,
+          SharingStarted.WhileSubscribed(5000),
+          false
+      )
 
     init {
         Log.e("TAG", ": "+"API Trigger")

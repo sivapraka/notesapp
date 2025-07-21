@@ -21,7 +21,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.notesapp.BuildConfig
 import com.notesapp.data.local.entity.ImdbMovies
 import com.notesapp.presentation.viewmodel.ImdbMoviesViewModel
 import com.notesapp.util.ImageUrlProviders
@@ -29,7 +28,7 @@ import com.notesapp.util.ImageUrlProviders
 @Composable
 fun ProfileScreen() {
     Surface(modifier = Modifier.fillMaxSize()) {
-        MovieListScreen()
+      Text("Profile Screen")
     }
 }
 
@@ -126,7 +125,13 @@ fun MovieCardDetails(movie: ImdbMovies) {
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = "${movie.vote_average}  ${movie.vote_count}",
+                text = "${movie.vote_average} ",
+                color = Color.White,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 4.dp)
+            )
+            Text(
+                text = "${movie.vote_count} votes",
                 color = Color.White,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(start = 4.dp)
@@ -137,17 +142,12 @@ fun MovieCardDetails(movie: ImdbMovies) {
 
         Text(
             movie.title.toString(),
-            fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis
+            fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.bodyMedium
         )
 
         movie.release_date?.let {
             Text(text = "Released $it", fontSize = 12.sp, color = Color.Gray)
         }
-
-    /*    Text(
-            text = movie.original_language.toString(),
-            fontSize = 12.sp,
-            color = Color.Gray
-        )*/
     }
 }

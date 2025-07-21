@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.notesapp.data.local.Database
 import com.notesapp.data.local.dao.ImageConfigDao
 import com.notesapp.data.local.dao.ImdbMoviesDao
+import com.notesapp.data.local.dao.PageDao
 import com.notesapp.data.local.dao.KeyConfigDao
 import com.notesapp.data.local.dao.LanguageDao
 import com.notesapp.data.remote.ImdbApi
@@ -112,11 +113,16 @@ object AppModule {
         return db.imdbMoviesDao()
     }
 
+    @Provides
+    fun providePageDao(db: Database): PageDao{
+        return db.pageDao()
+    }
+
     // Repository
     @Provides
     @Singleton
-    fun provideImdbRepository(dao: ImdbMoviesDao, api: ImdbApi): ImdbMovieRepository {
-        return ImdbMovieRepositoryImpl(moviesDao = dao, api = api)
+    fun provideImdbRepository(dao: ImdbMoviesDao, pageDao: PageDao, api: ImdbApi,  networkUtil: NetworkUtils): ImdbMovieRepository {
+        return ImdbMovieRepositoryImpl(moviesDao = dao,pageDao=pageDao, api = api,networkUtils=  networkUtil)
     }
 
     // DAO

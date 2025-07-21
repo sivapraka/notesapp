@@ -1,10 +1,13 @@
 package com.notesapp.di
 
+import android.content.Context
 import com.notesapp.data.remote.api.ApiService
 import com.notesapp.data.remote.api.MoviesApi
+import com.notesapp.util.network.NetworkConnectivityObserver
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -89,5 +92,13 @@ object NetworkModule {
     @Singleton
     fun provideMoviesApi(@UnsafeClient retrofit: Retrofit): MoviesApi {
         return retrofit.create(MoviesApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkConnectivityObserver(
+        @ApplicationContext context: Context
+    ): NetworkConnectivityObserver {
+        return NetworkConnectivityObserver(context)
     }
 }

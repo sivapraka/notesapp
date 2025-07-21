@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.notesapp.data.local.dao.ImageConfigDao
 import com.notesapp.data.local.dao.ImdbMoviesDao
+import com.notesapp.data.local.dao.PageDao
 import com.notesapp.data.local.dao.KeyConfigDao
 import com.notesapp.data.local.dao.LanguageDao
 import com.notesapp.data.local.dao.MoviesDao
@@ -12,6 +13,7 @@ import com.notesapp.data.local.dao.NoteDao
 import com.notesapp.data.local.dao.TimeZoneDao
 import com.notesapp.data.local.entity.ChangeKey
 import com.notesapp.data.local.entity.ImageConfigEntity
+import com.notesapp.data.local.entity.PagesEntity
 import com.notesapp.data.local.entity.ImdbMovies
 import com.notesapp.data.local.entity.LanguageEntity
 import com.notesapp.data.local.entity.Movies
@@ -23,7 +25,8 @@ import com.notesapp.util.Converters
 
 
 @Database(entities = [Note::class, Movies::class, Rating::class,LanguageEntity::class,TimeZoneEntity::class,
-                     ImdbMovies::class,MoviesGenreId::class, ChangeKey::class, ImageConfigEntity::class], version = 6)
+                     ImdbMovies::class,MoviesGenreId::class, ChangeKey::class, ImageConfigEntity::class,
+    PagesEntity::class], version = 7)
 @TypeConverters(Converters::class)
 abstract class Database : RoomDatabase() {
     abstract fun noteDao(): NoteDao
@@ -33,5 +36,6 @@ abstract class Database : RoomDatabase() {
     abstract fun imdbMoviesDao(): ImdbMoviesDao
     abstract fun keyConfigDao(): KeyConfigDao
     abstract fun imageConfigDao(): ImageConfigDao
+    abstract fun pageDao(): PageDao
 
 }

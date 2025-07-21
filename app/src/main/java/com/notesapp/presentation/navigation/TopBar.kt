@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.notesapp.presentation.components.NetworkStatusIndicator
 import com.notesapp.presentation.language.LanguageViewModel
 import com.notesapp.util.ApiResource
 
@@ -36,10 +37,10 @@ import com.notesapp.util.ApiResource
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun TopBar(viewModel: LanguageViewModel) {
-  //  val selectedCountry by viewModel.country.collectAsState()
+    //  val selectedCountry by viewModel.country.collectAsState()
     val state by viewModel.languages.collectAsState()
     var expanded by remember { mutableStateOf(false) }
-
+    val isOnline by viewModel.isOnline.collectAsState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,7 +50,7 @@ fun TopBar(viewModel: LanguageViewModel) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text("TicketNew", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-
+        NetworkStatusIndicator(Modifier,isOnline)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -59,7 +60,6 @@ fun TopBar(viewModel: LanguageViewModel) {
             Spacer(modifier = Modifier.width(12.dp))
             Icon(Icons.Default.LocationOn, contentDescription = "Location")
             Spacer(modifier = Modifier.width(4.dp))
-          //  Text(selectedCountry)
             Icon(Icons.Default.ArrowDropDown, contentDescription = "Dropdown")
         }
 
