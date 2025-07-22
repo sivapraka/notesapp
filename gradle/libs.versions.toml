@@ -3,6 +3,7 @@ activityComposeVersion = "1.10.1"
 biometricVersion = "1.2.0-alpha05"
 coilComposeVersion = "2.4.0"
 converterGsonVersion = "2.9.0"
+datastorePreferencesVersion = "1.1.7"
 gsonVersion = "2.11.0"
 hiltCompilerVersion = "2.51.1"
 hiltNavigationComposeVersion = "1.2.0"
@@ -30,6 +31,7 @@ activity-compose = { module = "androidx.activity:activity-compose", version.ref 
 biometric = { module = "androidx.biometric:biometric", version.ref = "biometricVersion" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGsonVersion" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferencesVersion" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompilerVersion" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationComposeVersion" }

@@ -6,9 +6,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.notesapp.presentation.bookings.BookingScreen
 import com.notesapp.presentation.home.HomeScreen
-import com.notesapp.presentation.profile.MovieListScreen
+import com.notesapp.presentation.home.MovieListScreen
+import com.notesapp.presentation.profile.ProfileRoute
 import com.notesapp.presentation.profile.ProfileScreen
 import com.notesapp.presentation.theatre.TheatreScreen
 
@@ -22,7 +22,7 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
     ) {
         composable(BottomNavItem.Home.route) { HomeScreen() }
         composable(BottomNavItem.Theatre.route) { TheatreScreen() }
-        composable(BottomNavItem.Bookings.route) { BookingScreen() }
-        composable(BottomNavItem.Profile.route) { MovieListScreen() }
+        composable(BottomNavItem.Bookings.route) { MovieListScreen() }
+        composable(BottomNavItem.Profile.route) { ProfileRoute() }
     }
 }

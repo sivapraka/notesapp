@@ -2,6 +2,7 @@ package com.notesapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.notesapp.data.datasource.PreferenceManager
 import com.notesapp.data.local.Database
 import com.notesapp.data.local.dao.ImageConfigDao
 import com.notesapp.data.local.dao.ImdbMoviesDao
@@ -16,11 +17,13 @@ import com.notesapp.data.repository.ImdbMovieRepositoryImpl
 import com.notesapp.data.repository.MovieRepositoryImpl
 import com.notesapp.data.repository.NoteRepositoryImpl
 import com.notesapp.data.repository.TimezoneRepositoryImpl
+import com.notesapp.data.repository.UserSettingsRepositoryImpl
 import com.notesapp.domain.repository.ImdbConfigRepository
 import com.notesapp.domain.repository.ImdbMovieRepository
 import com.notesapp.domain.repository.MovieRepository
 import com.notesapp.domain.repository.NoteRepository
 import com.notesapp.domain.repository.TimezoneRepository
+import com.notesapp.domain.repository.UserSettingsRepository
 import com.notesapp.domain.usecase.AddNotesUseCase
 import com.notesapp.domain.usecase.DeleteNotesUseCase
 import com.notesapp.domain.usecase.GetMovieUseCase
@@ -142,4 +145,23 @@ object AppModule {
     fun provideImdbImageConfigRepository(dao: ImageConfigDao,dao1: KeyConfigDao, api: ImdbApi): ImdbConfigRepository {
         return ImdbConfigRepositoryImpl(imageConfigDao=dao,keyConfigDao = dao1, api = api)
     }
+
+    // Provide PreferenceManager singleton
+    @Provides
+    @Singleton
+    fun providePreferenceManager(
+        @ApplicationContext context: Context
+    ): PreferenceManager {
+        return PreferenceManager(context)
+    }
+
+    // Provide repository implementation
+    @Provides
+    @Singleton
+    fun provideUserSettingsRepository(
+        preferenceManager: PreferenceManager
+    ): UserSettingsRepository {
+        return UserSettingsRepositoryImpl(preferenceManager)
+    }
+
 }
