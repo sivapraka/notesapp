@@ -10,6 +10,7 @@ import javax.inject.Inject
 class RefreshTimezoneUseCase @Inject constructor(private val repository: TimezoneRepository) {
     operator fun invoke(): Flow<ApiResource<List<TimeZoneEntity>>> = flow {
         emit(ApiResource.Loading)
+        repository.refreshTimezones()
         repository.getTimezone().collect { languages ->
             emit(ApiResource.Success(languages))
         }

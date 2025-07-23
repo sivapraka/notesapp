@@ -22,10 +22,6 @@ class TimezoneViewModel @Inject constructor(private val getTimezoneUseCase: GetT
         MutableStateFlow<ApiResource<List<TimeZoneEntity>>>(ApiResource.Loading)
     var timezones: StateFlow<ApiResource<List<TimeZoneEntity>>> = _timezones
 
-    init {
-        getTimezone()
-    }
-
     fun getTimezone() {
         viewModelScope.launch {
             getTimezoneUseCase().collect { _timezones.value = it }

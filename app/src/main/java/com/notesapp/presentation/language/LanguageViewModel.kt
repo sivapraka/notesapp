@@ -5,17 +5,14 @@ import android.util.Log
 import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.notesapp.data.datasource.PreferenceManager
 import com.notesapp.data.local.entity.LanguageEntity
 import com.notesapp.domain.usecase.GetLanguageUseCase
 import com.notesapp.domain.usecase.RefreshLanguagesUseCase
 import com.notesapp.util.ApiResource
 import com.notesapp.util.network.NetworkConnectivityObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,11 +21,14 @@ import javax.inject.Inject
 class LanguageViewModel @Inject constructor(
     private val getLanguagesUseCase: GetLanguageUseCase,
     private val refreshLanguagesUseCase: RefreshLanguagesUseCase,
-    networkObserver: NetworkConnectivityObserver
+    networkObserver: NetworkConnectivityObserver,
+   private  val preferenceManager: PreferenceManager,
 ) : ViewModel() {
     private var _languages =
         MutableStateFlow<ApiResource<List<LanguageEntity>>>(ApiResource.Loading)
     var languages: StateFlow<ApiResource<List<LanguageEntity>>> = _languages
+    private val _selectedLanguage = MutableStateFlow("English")
+    val selectedLanguage: StateFlow<String> = _selectedLanguage
   /*  private var _country = MutableStateFlow(Locale.getDefault().displayCountry) // or "Bengaluru"
     var country: StateFlow<String> = _country*/
   val isOnline: StateFlow<Boolean> = networkObserver.networkStatus
@@ -39,11 +39,15 @@ class LanguageViewModel @Inject constructor(
           false
       )
 
-    init {
-        Log.e("TAG", ": "+"API Trigger")
+    fun languages() {
         viewModelScope.launch {
-            Log.e("TAG", ": "+"API Trigger")
             getLanguagesUseCase().collect { _languages.value = it }
+            // Observe selected language code
+            preferenceManager.selectedLanguage.collect { code ->
+                val languageList = (_languages.value as? ApiResource.Success)?.data ?: emptyList()
+                val match = languageList.find { it.iso_639_1 == code }
+                _selectedLanguage.value = match?.english_name ?: "English"
+            }
         }
     }
 
@@ -53,7 +57,12 @@ class LanguageViewModel @Inject constructor(
         }
     }
 
-    fun onCountrySelected(c: String) {
-      //  _country.value = c
+    fun onCountrySelected(languageName: String) {
+        viewModelScope.launch {
+            preferenceManager.saveLanguage(languageName)
+            val languageList = (_languages.value as? ApiResource.Success)?.data ?: emptyList()
+            val match = languageList.find { it.iso_639_1 == languageName }
+            _selectedLanguage.value = match?.english_name ?: "English"
+        }
     }
 }

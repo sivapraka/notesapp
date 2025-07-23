@@ -11,7 +11,6 @@ class GetTimezonesUseCase @Inject constructor(private val repository: TimezoneRe
 
     operator fun invoke(): Flow<ApiResource<List<TimeZoneEntity>>> = flow {
         emit(ApiResource.Loading)
-        repository.refreshTimezones()
         repository.getTimezone().collect { languages ->
             emit(ApiResource.Success(languages))
         }

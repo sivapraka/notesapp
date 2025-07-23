@@ -24,8 +24,13 @@ class PreferenceManager @Inject constructor(
     companion object {
         private val THEME_KEY = stringPreferencesKey("theme_option")
         private val FONT_KEY = stringPreferencesKey("font_option")
+        private val LANGUAGE_KEY = stringPreferencesKey("selected_language")
     }
 
+    val selectedLanguage: Flow<String> = context.dataStore.data
+        .map { preferences ->
+            preferences[LANGUAGE_KEY] ?: "en" // default value
+        }
     // Read preferences as a flow
     val preferencesFlow: Flow<UserSettings> = context.dataStore.data.map { preferences ->
         val themeName = preferences[THEME_KEY] ?: ThemeOption.SYSTEM.name
@@ -42,6 +47,11 @@ class PreferenceManager @Inject constructor(
         context.dataStore.edit { preferences ->
             preferences[THEME_KEY] = theme.name
             preferences[FONT_KEY] = font.name
+        }
+    }
+    suspend fun saveLanguage(language: String) {
+        context.dataStore.edit { preferences ->
+            preferences[LANGUAGE_KEY] = language
         }
     }
 }

@@ -90,4 +90,9 @@ dependencies {
     implementation(libs.paging.compose)
     implementation(libs.room.paging)
     implementation(libs.datastore.preferences)
+    // Google Play Services Location
+    implementation (libs.play.services.location)
+    // Coroutines support for Play‑Services Tasks
+    implementation (libs.kotlinx.coroutines.play.services)
+    implementation(libs.timber)
 }

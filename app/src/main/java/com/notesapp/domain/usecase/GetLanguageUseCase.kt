@@ -16,7 +16,6 @@ class GetLanguageUseCase @Inject constructor(
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     operator fun invoke(): Flow<ApiResource<List<LanguageEntity>>> = flow {
         emit(ApiResource.Loading)
-        repository.refreshLanguages()
         repository.getLanguage().collect { languages ->
             emit(ApiResource.Success(languages))
         }
