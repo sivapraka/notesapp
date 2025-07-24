@@ -36,7 +36,7 @@ interface ImdbApi {
 
 
     @GET("movie/{movie_id}")
-    suspend fun movieDetails(
+    fun movieDetails(
         @Path("movie_id") id: Int,
         @Query("language") language: String = "ta",
     ): ImdbMoviesDetails

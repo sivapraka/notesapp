@@ -98,17 +98,19 @@ fun TopBar(
 }
 
 
-
-
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
-fun TopBar1(locationViewModel: LocationViewModel,
-    languageViewModel: LanguageViewModel = hiltViewModel()) {
+fun TopBar1(
+    locationViewModel: LocationViewModel,
+    languageViewModel: LanguageViewModel = hiltViewModel()
+) {
     // Observe language name
     val selectedLanguage by languageViewModel.selectedLanguage.collectAsState()
     // Observe place name
     val placeName by locationViewModel.placeName.collectAsState()
-
+    LaunchedEffect(Unit) {
+        languageViewModel.languages()
+    }
     var expanded by remember { mutableStateOf(false) }
 
     Row(
@@ -172,9 +174,11 @@ fun TopBar1(locationViewModel: LocationViewModel,
                                 )
                             }
                         }
+
                         is ApiResource.Loading -> {
                             DropdownMenuItem(text = { Text("Loading…") }, onClick = {})
                         }
+
                         is ApiResource.Error -> {
                             DropdownMenuItem(
                                 text = { Text("Error: ${result.message}") },

@@ -30,7 +30,7 @@ fun SplashScreen(onPermissionGranted: () -> Unit) {
     // Trigger navigation once permission is granted
     LaunchedEffect(hasPermission) {
         if (hasPermission) {
-            delay(1000) // Optional: to show splash for a second
+            delay(10000) // Optional: to show splash for a second
             onPermissionGranted()
         }
     }

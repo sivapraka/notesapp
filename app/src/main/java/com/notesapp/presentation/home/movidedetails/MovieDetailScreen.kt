@@ -1,14 +1,13 @@
 package com.notesapp.presentation.home.movidedetails
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.notesapp.data.local.entity.MoviesVideosResponse
 import com.notesapp.util.ApiResource
 
 @Composable
@@ -16,7 +15,6 @@ fun MovieDetailScreen(movieId :Int,viewModel: ImdbMoviesDetailsViewModel = hiltV
     val st by viewModel.movieDetails.collectAsState()
     val videoState by viewModel.videos.collectAsState()
     LaunchedEffect(movieId) {
-        Log.e("TAG", "MovieDetailScreen: "+movieId )
         viewModel.movieDetails(movieId)
         viewModel.loadVideos(movieId)
     }

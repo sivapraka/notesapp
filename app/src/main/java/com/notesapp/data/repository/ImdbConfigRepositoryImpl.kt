@@ -6,21 +6,33 @@ import com.notesapp.data.local.entity.ImageConfigEntity
 import com.notesapp.data.mapper.toChangeKey
 import com.notesapp.data.remote.ImdbApi
 import com.notesapp.domain.repository.ImdbConfigRepository
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
+import timber.log.Timber
 
 class ImdbConfigRepositoryImpl(
     private val imageConfigDao: ImageConfigDao,
     private val keyConfigDao: KeyConfigDao,
     private val api: ImdbApi,
 ) : ImdbConfigRepository {
-    override suspend fun downloadConfig() : Flow<ImageConfigEntity>{
-            val response = api.configuration()
-            imageConfigDao.insertImageConfig(response.images)
-            keyConfigDao.insertKeyConfig(response.changeKeys.toChangeKey())
-            return imageConfigDao.getConfig()
+    override fun downloadConfig(): Flow<ImageConfigEntity?> = flow {
+        val cachedConfig = imageConfigDao.getConfig().firstOrNull()
+        if (cachedConfig != null) {
+            emit(cachedConfig)
+        } else {
+            try {
+                val response = api.configuration()
+                imageConfigDao.insertImageConfig(response.images)
+                keyConfigDao.insertKeyConfig(response.changeKeys.toChangeKey())
+                emit(imageConfigDao.getConfig().firstOrNull())
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
+
     }
 
-    override suspend fun configs(): Flow<ImageConfigEntity> {
+
+    override suspend fun configs(): Flow<ImageConfigEntity?> {
         return imageConfigDao.getConfig()
     }
 

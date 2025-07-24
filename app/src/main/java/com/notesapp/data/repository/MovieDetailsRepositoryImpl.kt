@@ -1,27 +1,32 @@
 package com.notesapp.data.repository
 
-import android.util.Log
 import com.notesapp.data.local.dao.ImdbMoviesDetailsDao
 import com.notesapp.data.local.entity.ImdbMoviesDetails
 import com.notesapp.data.remote.ImdbApi
 import com.notesapp.domain.repository.MovieDetailsRepository
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
 
 class MovieDetailsRepositoryImpl(
     private val moviesDetailsDao: ImdbMoviesDetailsDao,
     private val api: ImdbApi,
 ) : MovieDetailsRepository {
-
-    override suspend fun downloadDetails(
-        movieid: Int,
-    ): Flow<ImdbMoviesDetails?> {
-        val response = api.movieDetails(movieid, "ta")
+    override fun downloadDetails(movieId: Int, language: String): Flow<ImdbMoviesDetails?> = flow {
+        val response = api.movieDetails(movieId, language)
         moviesDetailsDao.insertDetails(response)
-        return moviesDetailsDao.getMovieDetails(movieid)
+        emit(response)
+       /* val cacheDetails = moviesDetailsDao.getMovieDetails(movieId).firstOrNull()
+        if (cacheDetails != null) {
+            emit(cacheDetails)
+        } else {
+            val response = api.movieDetails(movieId, language)
+            moviesDetailsDao.insertDetails(response)
+            emit(response)
+        }*/
     }
 
-    override suspend fun getMovieDetails(movieid: Int): Flow<ImdbMoviesDetails?> {
-        return moviesDetailsDao.getMovieDetails(movieid)
+
+    override fun getMovieDetails(movieId: Int): Flow<ImdbMoviesDetails?> = flow {
+        emit(moviesDetailsDao.getMovieDetails(movieId).firstOrNull())
     }
 
 }

@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface LanguageRepository {
     suspend fun getRequestToken(): RequestTokenResponse
-     fun getLanguage(): Flow<List<LanguageEntity>>
+    fun getLanguage(): Flow<List<LanguageEntity>>
     suspend fun refreshLanguages()
 }
