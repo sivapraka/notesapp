@@ -6,6 +6,7 @@ import com.notesapp.data.datasource.PreferenceManager
 import com.notesapp.data.local.Database
 import com.notesapp.data.local.dao.ImageConfigDao
 import com.notesapp.data.local.dao.ImdbMoviesDao
+import com.notesapp.data.local.dao.ImdbMoviesDetailsDao
 import com.notesapp.data.local.dao.PageDao
 import com.notesapp.data.local.dao.KeyConfigDao
 import com.notesapp.data.local.dao.LanguageDao
@@ -14,12 +15,14 @@ import com.notesapp.data.remote.api.ApiService
 import com.notesapp.data.remote.api.MoviesApi
 import com.notesapp.data.repository.ImdbConfigRepositoryImpl
 import com.notesapp.data.repository.ImdbMovieRepositoryImpl
+import com.notesapp.data.repository.MovieDetailsRepositoryImpl
 import com.notesapp.data.repository.MovieRepositoryImpl
 import com.notesapp.data.repository.NoteRepositoryImpl
 import com.notesapp.data.repository.TimezoneRepositoryImpl
 import com.notesapp.data.repository.UserSettingsRepositoryImpl
 import com.notesapp.domain.repository.ImdbConfigRepository
 import com.notesapp.domain.repository.ImdbMovieRepository
+import com.notesapp.domain.repository.MovieDetailsRepository
 import com.notesapp.domain.repository.MovieRepository
 import com.notesapp.domain.repository.NoteRepository
 import com.notesapp.domain.repository.TimezoneRepository
@@ -163,5 +166,18 @@ object AppModule {
     ): UserSettingsRepository {
         return UserSettingsRepositoryImpl(preferenceManager)
     }
+
+    // DAO
+    @Provides
+    fun provideMovieDetailsDao(db: Database): ImdbMoviesDetailsDao {
+        return db.imdbMoviesDetailsDao()
+    }
+    // Repository
+    @Provides
+    @Singleton
+    fun provideImdbMovieDetailsRepository(dao: ImdbMoviesDetailsDao, api: ImdbApi): MovieDetailsRepository {
+        return MovieDetailsRepositoryImpl(dao,api = api)
+    }
+
 
 }

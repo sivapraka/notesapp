@@ -14,7 +14,6 @@ class ImdbConfigRepositoryImpl(
     private val api: ImdbApi,
 ) : ImdbConfigRepository {
     override suspend fun downloadConfig() : Flow<ImageConfigEntity>{
-
             val response = api.configuration()
             imageConfigDao.insertImageConfig(response.images)
             keyConfigDao.insertKeyConfig(response.changeKeys.toChangeKey())

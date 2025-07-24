@@ -1,6 +1,7 @@
 package com.notesapp.presentation.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
@@ -25,7 +27,7 @@ import com.notesapp.presentation.viewmodel.ImdbMoviesViewModel
 import com.notesapp.util.ImageUrlProviders
 
 @Composable
-fun MovieListScreen(viewModel: ImdbMoviesViewModel = hiltViewModel()) {
+fun MovieListScreen(navHostController: NavHostController, viewModel: ImdbMoviesViewModel = hiltViewModel()) {
     val movies = viewModel.movies.collectAsLazyPagingItems()
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -37,7 +39,9 @@ fun MovieListScreen(viewModel: ImdbMoviesViewModel = hiltViewModel()) {
         items(movies.itemCount) { index ->
             val movie = movies[index]
             movie?.let {
-                MovieCardDetails(movie)
+                MovieCardDetails(movie){
+                    navHostController.navigate("movie_details/${movie.id}")
+                }
             }
         }
 
@@ -71,10 +75,10 @@ fun MovieListScreen(viewModel: ImdbMoviesViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun MovieCardDetails(movie: ImdbMovies) {
+fun MovieCardDetails(movie: ImdbMovies,onclick:()->Unit) {
     Column(
         modifier = Modifier
-            .width(180.dp)
+            .width(180.dp).clickable{onclick()}
     ) {
         Box {
             val imageurl = "${ImageUrlProviders.basePosterUrl}${movie.poster_path!!}"

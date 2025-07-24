@@ -1,5 +1,6 @@
 package com.notesapp.data.remote
 
+import com.notesapp.data.local.entity.ImdbMoviesDetails
 import com.notesapp.data.local.entity.LanguageEntity
 import com.notesapp.data.local.entity.TimeZoneEntity
 import com.notesapp.data.mapper.ConfigResponse
@@ -7,6 +8,7 @@ import com.notesapp.data.model.ImdbMovieResponse
 import com.notesapp.domain.model.RequestTokenResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ImdbApi {
@@ -30,4 +32,11 @@ interface ImdbApi {
 
     @GET("configuration")
     suspend fun configuration(): ConfigResponse
+
+
+    @GET("movie/{movie_id}")
+    suspend fun movieDetails(@Path("movie_id") id: Int,
+        @Query("language") language: String = "ta",
+    ): ImdbMoviesDetails
+
 }
