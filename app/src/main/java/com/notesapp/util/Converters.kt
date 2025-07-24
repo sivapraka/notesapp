@@ -8,6 +8,7 @@ import com.notesapp.data.local.entity.ImdbGenres
 import com.notesapp.data.local.entity.ImdbProductionCompanies
 import com.notesapp.data.local.entity.ImdbProductionCountries
 import com.notesapp.data.local.entity.ImdbSpokenLanguage
+import com.notesapp.data.local.entity.MoviesVideos
 
 class Converters {
     @TypeConverter
@@ -40,11 +41,11 @@ class Converters {
 
 
     @TypeConverter
-    fun fromCollection(value: ImdbCollections): String = Gson().toJson(value)
+    fun fromCollection(value: ImdbCollections?): String = Gson().toJson(value)
 
     @TypeConverter
-    fun toCollection(value: String): ImdbCollections =
-        Gson().fromJson(value, object : TypeToken<ImdbCollections>() {}.type)
+    fun toCollection(value: String): ImdbCollections? =
+        Gson().fromJson(value, object : TypeToken<ImdbCollections?>() {}.type)
 
     @TypeConverter
     fun fromProductionCompanies(value: List<ImdbProductionCompanies>): String = Gson().toJson(value)
@@ -66,5 +67,12 @@ class Converters {
     @TypeConverter
     fun toSpokenLanguages(value: String): List<ImdbSpokenLanguage> =
         Gson().fromJson(value, object : TypeToken<List<ImdbSpokenLanguage>>() {}.type)
+
+
+    @TypeConverter
+    fun fromVideos(value: List<MoviesVideos>): String = Gson().toJson(value)
+    @TypeConverter
+    fun toVideos(value: String): List<MoviesVideos> =
+        Gson().fromJson(value, object : TypeToken<List<MoviesVideos>>() {}.type)
 
 }

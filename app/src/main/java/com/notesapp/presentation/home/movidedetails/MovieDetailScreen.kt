@@ -8,14 +8,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.notesapp.data.local.entity.MoviesVideosResponse
 import com.notesapp.util.ApiResource
 
 @Composable
 fun MovieDetailScreen(movieId :Int,viewModel: ImdbMoviesDetailsViewModel = hiltViewModel()) {
     val st by viewModel.movieDetails.collectAsState()
+    val videoState by viewModel.videos.collectAsState()
     LaunchedEffect(movieId) {
         Log.e("TAG", "MovieDetailScreen: "+movieId )
         viewModel.movieDetails(movieId)
+        viewModel.loadVideos(movieId)
     }
     when (val state=st) {
         is ApiResource.Loading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -36,6 +39,15 @@ fun MovieDetailScreen(movieId :Int,viewModel: ImdbMoviesDetailsViewModel = hiltV
                         )
                         MovieTitleSection(movie)
                         MovieGenres(movie.genres)
+                        videoState.let {
+                            when (val video=it) {
+                                is ApiResource.Loading -> null
+                                is ApiResource.Error -> null
+                                is ApiResource.Success ->{
+                                        video.data?.results?.let { it -> MovieVideosSection(it) }
+                                }
+                            }
+                        }
                         MovieOverview(movie.overview!!)
                         MovieDetails(movie)
                         ProductionCompanies(movie.production_companies)

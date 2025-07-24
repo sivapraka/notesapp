@@ -1,7 +1,7 @@
 package com.notesapp.domain.usecase
 
-import com.notesapp.data.local.entity.ImdbMoviesDetails
-import com.notesapp.domain.repository.MovieDetailsRepository
+import com.notesapp.data.local.entity.MoviesVideosResponse
+import com.notesapp.domain.repository.MovieVideosRepository
 import com.notesapp.util.ApiResource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -9,15 +9,14 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class RefreshImdbMoviesDetailsUseCase @Inject constructor(
-    private val repository: MovieDetailsRepository
+class GetImdbMoviesVideosUseCase @Inject constructor(
+    private val repository: MovieVideosRepository
 ) {
-    operator fun invoke(movieId: Int): Flow<ApiResource<ImdbMoviesDetails?>> =
+    operator fun invoke(movieId: Int): Flow<ApiResource<MoviesVideosResponse?>> =
         flow {
             try {
                 emit(ApiResource.Loading)
-                repository.downloadDetails(movieId)
-                repository.getMovieDetails(movieId).collect { it ->
+                repository.downloadVideos(movieId).collect {
                     emit(ApiResource.Success(it))
                 }
             } catch (e: Exception) {

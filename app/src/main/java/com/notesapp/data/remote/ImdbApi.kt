@@ -2,6 +2,7 @@ package com.notesapp.data.remote
 
 import com.notesapp.data.local.entity.ImdbMoviesDetails
 import com.notesapp.data.local.entity.LanguageEntity
+import com.notesapp.data.local.entity.MoviesVideosResponse
 import com.notesapp.data.local.entity.TimeZoneEntity
 import com.notesapp.data.mapper.ConfigResponse
 import com.notesapp.data.model.ImdbMovieResponse
@@ -35,8 +36,16 @@ interface ImdbApi {
 
 
     @GET("movie/{movie_id}")
-    suspend fun movieDetails(@Path("movie_id") id: Int,
+    suspend fun movieDetails(
+        @Path("movie_id") id: Int,
         @Query("language") language: String = "ta",
     ): ImdbMoviesDetails
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun videos(
+        @Path("movie_id") id: Int,
+        @Query("language") language: String = "en",
+    ): MoviesVideosResponse
+
 
 }

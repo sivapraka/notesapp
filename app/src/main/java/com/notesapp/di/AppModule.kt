@@ -10,6 +10,7 @@ import com.notesapp.data.local.dao.ImdbMoviesDetailsDao
 import com.notesapp.data.local.dao.PageDao
 import com.notesapp.data.local.dao.KeyConfigDao
 import com.notesapp.data.local.dao.LanguageDao
+import com.notesapp.data.local.dao.MovieVideosDao
 import com.notesapp.data.remote.ImdbApi
 import com.notesapp.data.remote.api.ApiService
 import com.notesapp.data.remote.api.MoviesApi
@@ -17,6 +18,7 @@ import com.notesapp.data.repository.ImdbConfigRepositoryImpl
 import com.notesapp.data.repository.ImdbMovieRepositoryImpl
 import com.notesapp.data.repository.MovieDetailsRepositoryImpl
 import com.notesapp.data.repository.MovieRepositoryImpl
+import com.notesapp.data.repository.MovieVideosRepositoryImpl
 import com.notesapp.data.repository.NoteRepositoryImpl
 import com.notesapp.data.repository.TimezoneRepositoryImpl
 import com.notesapp.data.repository.UserSettingsRepositoryImpl
@@ -24,6 +26,7 @@ import com.notesapp.domain.repository.ImdbConfigRepository
 import com.notesapp.domain.repository.ImdbMovieRepository
 import com.notesapp.domain.repository.MovieDetailsRepository
 import com.notesapp.domain.repository.MovieRepository
+import com.notesapp.domain.repository.MovieVideosRepository
 import com.notesapp.domain.repository.NoteRepository
 import com.notesapp.domain.repository.TimezoneRepository
 import com.notesapp.domain.repository.UserSettingsRepository
@@ -120,15 +123,25 @@ object AppModule {
     }
 
     @Provides
-    fun providePageDao(db: Database): PageDao{
+    fun providePageDao(db: Database): PageDao {
         return db.pageDao()
     }
 
     // Repository
     @Provides
     @Singleton
-    fun provideImdbRepository(dao: ImdbMoviesDao, pageDao: PageDao, api: ImdbApi,  networkUtil: NetworkUtils): ImdbMovieRepository {
-        return ImdbMovieRepositoryImpl(moviesDao = dao,pageDao=pageDao, api = api,networkUtils=  networkUtil)
+    fun provideImdbRepository(
+        dao: ImdbMoviesDao,
+        pageDao: PageDao,
+        api: ImdbApi,
+        networkUtil: NetworkUtils
+    ): ImdbMovieRepository {
+        return ImdbMovieRepositoryImpl(
+            moviesDao = dao,
+            pageDao = pageDao,
+            api = api,
+            networkUtils = networkUtil
+        )
     }
 
     // DAO
@@ -142,11 +155,16 @@ object AppModule {
     fun provideKeyConfigMoviesDao(db: Database): KeyConfigDao {
         return db.keyConfigDao()
     }
+
     // Repository
     @Provides
     @Singleton
-    fun provideImdbImageConfigRepository(dao: ImageConfigDao,dao1: KeyConfigDao, api: ImdbApi): ImdbConfigRepository {
-        return ImdbConfigRepositoryImpl(imageConfigDao=dao,keyConfigDao = dao1, api = api)
+    fun provideImdbImageConfigRepository(
+        dao: ImageConfigDao,
+        dao1: KeyConfigDao,
+        api: ImdbApi
+    ): ImdbConfigRepository {
+        return ImdbConfigRepositoryImpl(imageConfigDao = dao, keyConfigDao = dao1, api = api)
     }
 
     // Provide PreferenceManager singleton
@@ -172,12 +190,26 @@ object AppModule {
     fun provideMovieDetailsDao(db: Database): ImdbMoviesDetailsDao {
         return db.imdbMoviesDetailsDao()
     }
+
     // Repository
     @Provides
     @Singleton
-    fun provideImdbMovieDetailsRepository(dao: ImdbMoviesDetailsDao, api: ImdbApi): MovieDetailsRepository {
-        return MovieDetailsRepositoryImpl(dao,api = api)
+    fun provideImdbMovieDetailsRepository(
+        dao: ImdbMoviesDetailsDao,
+        api: ImdbApi
+    ): MovieDetailsRepository {
+        return MovieDetailsRepositoryImpl(dao, api = api)
     }
 
+    @Provides
+    fun provideMovieVideosDao(db: Database): MovieVideosDao {
+        return db.movieVideosDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMovieVideosRepository(dao: MovieVideosDao, api: ImdbApi): MovieVideosRepository {
+        return MovieVideosRepositoryImpl(dao, api = api)
+    }
 
 }

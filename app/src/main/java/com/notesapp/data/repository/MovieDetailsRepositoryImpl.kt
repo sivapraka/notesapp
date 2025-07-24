@@ -15,9 +15,7 @@ class MovieDetailsRepositoryImpl(
     override suspend fun downloadDetails(
         movieid: Int,
     ): Flow<ImdbMoviesDetails?> {
-        Log.e("TAG", "downloadDetails: "+movieid )
         val response = api.movieDetails(movieid, "ta")
-        Log.e("TAG", "downloadDetails: "+response.toString() )
         moviesDetailsDao.insertDetails(response)
         return moviesDetailsDao.getMovieDetails(movieid)
     }

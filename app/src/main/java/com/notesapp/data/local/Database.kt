@@ -9,6 +9,7 @@ import com.notesapp.data.local.dao.ImdbMoviesDetailsDao
 import com.notesapp.data.local.dao.PageDao
 import com.notesapp.data.local.dao.KeyConfigDao
 import com.notesapp.data.local.dao.LanguageDao
+import com.notesapp.data.local.dao.MovieVideosDao
 import com.notesapp.data.local.dao.MoviesDao
 import com.notesapp.data.local.dao.NoteDao
 import com.notesapp.data.local.dao.TimeZoneDao
@@ -25,6 +26,8 @@ import com.notesapp.data.local.entity.ImdbSpokenLanguage
 import com.notesapp.data.local.entity.LanguageEntity
 import com.notesapp.data.local.entity.Movies
 import com.notesapp.data.local.entity.MoviesGenreId
+import com.notesapp.data.local.entity.MoviesVideos
+import com.notesapp.data.local.entity.MoviesVideosResponse
 import com.notesapp.data.local.entity.Note
 import com.notesapp.data.local.entity.Rating
 import com.notesapp.data.local.entity.TimeZoneEntity
@@ -37,8 +40,8 @@ import com.notesapp.util.Converters
         ImdbMovies::class, MoviesGenreId::class, ChangeKey::class, ImageConfigEntity::class,
         PagesEntity::class, ImdbMoviesDetails::class, ImdbCollections::class,
         ImdbGenres::class, ImdbProductionCompanies::class, ImdbProductionCountries::class,
-        ImdbSpokenLanguage::class
-    ], version = 8
+        ImdbSpokenLanguage::class, MoviesVideos::class, MoviesVideosResponse::class
+    ], version = 9
 )
 @TypeConverters(Converters::class)
 abstract class Database : RoomDatabase() {
@@ -51,5 +54,6 @@ abstract class Database : RoomDatabase() {
     abstract fun imageConfigDao(): ImageConfigDao
     abstract fun pageDao(): PageDao
     abstract fun imdbMoviesDetailsDao(): ImdbMoviesDetailsDao
+    abstract fun movieVideosDao(): MovieVideosDao
 
 }
