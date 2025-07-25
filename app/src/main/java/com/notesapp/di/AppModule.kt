@@ -2,6 +2,8 @@ package com.notesapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.notesapp.data.datasource.PreferenceManager
 import com.notesapp.data.local.Database
 import com.notesapp.data.local.dao.ImageConfigDao
@@ -14,6 +16,7 @@ import com.notesapp.data.local.dao.MovieVideosDao
 import com.notesapp.data.remote.ImdbApi
 import com.notesapp.data.remote.api.ApiService
 import com.notesapp.data.remote.api.MoviesApi
+import com.notesapp.data.repository.AppUpdateRepositoryImpl
 import com.notesapp.data.repository.ImdbConfigRepositoryImpl
 import com.notesapp.data.repository.ImdbMovieRepositoryImpl
 import com.notesapp.data.repository.MovieDetailsRepositoryImpl
@@ -22,6 +25,7 @@ import com.notesapp.data.repository.MovieVideosRepositoryImpl
 import com.notesapp.data.repository.NoteRepositoryImpl
 import com.notesapp.data.repository.TimezoneRepositoryImpl
 import com.notesapp.data.repository.UserSettingsRepositoryImpl
+import com.notesapp.domain.repository.AppUpdateRepository
 import com.notesapp.domain.repository.ImdbConfigRepository
 import com.notesapp.domain.repository.ImdbMovieRepository
 import com.notesapp.domain.repository.MovieDetailsRepository
@@ -210,6 +214,17 @@ object AppModule {
     @Singleton
     fun provideMovieVideosRepository(dao: MovieVideosDao, api: ImdbApi): MovieVideosRepository {
         return MovieVideosRepositoryImpl(dao, api = api)
+    }
+
+
+    @Provides
+    fun provideAppUpdateManager(@ApplicationContext context: Context): AppUpdateManager {
+        return AppUpdateManagerFactory.create(context)
+    }
+
+    @Provides
+    fun provideAppUpdateRepository(appUpdateManager: AppUpdateManager): AppUpdateRepository {
+        return AppUpdateRepositoryImpl(appUpdateManager)
     }
 
 }

@@ -22,13 +22,16 @@ import com.notesapp.presentation.timezone.TimezoneViewModel
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @SuppressLint("StateFlowValueCalledInComposition", "CoroutineCreationDuringComposition")
 @Composable
-fun MainScreen() {
-    val timezoneViewModel: TimezoneViewModel = hiltViewModel()
-    val profileViewModel: ProfileViewModel = hiltViewModel()
+fun MainScreen(
+    snackbarHostState: SnackbarHostState,
+    timezoneViewModel: TimezoneViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+    locationViewModel: LocationViewModel = hiltViewModel()
+) {
     // Collect Profile state (theme & font)
     val profileUiState by profileViewModel.uiState.collectAsState()
-    val locationViewModel:LocationViewModel = hiltViewModel()
-    LaunchedEffect(Unit) {
+
+    LaunchedEffect(true) {
         timezoneViewModel.getTimezone()
         locationViewModel.fetchLocationAndPlace()
     }
@@ -40,6 +43,7 @@ fun MainScreen() {
         fontFamily = profileUiState.selectedFont.toFontFamily(),
         content = {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = { TopBar1(locationViewModel) },
                 bottomBar = { BottomNavigationBar(navController) }
             ) { innerPadding ->

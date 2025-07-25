@@ -95,4 +95,6 @@ dependencies {
     // Coroutines support for Play‑Services Tasks
     implementation (libs.kotlinx.coroutines.play.services)
     implementation(libs.timber)
+    // Play Store -App-Update
+    implementation (libs.app.update)
 }
