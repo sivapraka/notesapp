@@ -32,7 +32,6 @@ class ImdbMoviesDetailsViewModel @Inject constructor(
     fun movieDetails(movieId: Int) {
         viewModelScope.launch {
             refreshImdbMoviesDetailsUseCase(movieId).collect { result ->
-                Log.e("TAG", "movieDetails: "+"Referesh" )
                 _movieDetails.value = result
             }
 

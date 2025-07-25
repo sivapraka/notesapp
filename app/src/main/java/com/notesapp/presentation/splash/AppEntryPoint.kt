@@ -1,7 +1,6 @@
 package com.notesapp.presentation.splash
 
 import android.annotation.SuppressLint
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import com.notesapp.presentation.home.MainScreen
 

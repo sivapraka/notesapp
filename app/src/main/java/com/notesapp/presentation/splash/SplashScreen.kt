@@ -2,12 +2,12 @@ package com.notesapp.presentation.splash
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import com.notesapp.presentation.components.Loading
 import com.notesapp.presentation.components.LocationPermissionHandler
 import kotlinx.coroutines.delay
 
@@ -30,16 +30,16 @@ fun SplashScreen(onPermissionGranted: () -> Unit) {
     // Trigger navigation once permission is granted
     LaunchedEffect(hasPermission) {
         if (hasPermission) {
-            delay(10000) // Optional: to show splash for a second
+            delay(2000) // Optional: to show splash for a second
             onPermissionGranted()
         }
     }
-
     // Splash UI
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Loading(modifier = Modifier.size(150.dp))
+        }
 }

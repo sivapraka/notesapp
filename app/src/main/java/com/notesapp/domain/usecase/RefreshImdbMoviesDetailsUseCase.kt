@@ -1,6 +1,5 @@
 package com.notesapp.domain.usecase
 
-import android.util.Log
 import com.notesapp.data.datasource.PreferenceManager
 import com.notesapp.data.local.entity.ImdbMoviesDetails
 import com.notesapp.domain.repository.MovieDetailsRepository
@@ -16,18 +15,19 @@ class RefreshImdbMoviesDetailsUseCase @Inject constructor(
     private val preferenceManager: PreferenceManager
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(movieId: Int): Flow<ApiResource<ImdbMoviesDetails?>> =
-        flow {
-            try {
-                emit(ApiResource.Loading)
-                preferenceManager.selectedLanguage.flatMapLatest { language ->
-                    Timber.tag("MoviesDetailsUseCase").e("language:$language")
-                    Log.e("MoviesDetailsUseCase", "invoke: $language" )
-                    repository.downloadDetails(movieId, language)
+    operator fun invoke(movieId: Int): Flow<ApiResource<ImdbMoviesDetails?>> {
+        return preferenceManager.selectedLanguage
+            .flatMapLatest { language ->
+                flow {
+                    emit(ApiResource.Loading)
+                    try {
+                        val result = repository.downloadDetails(movieId, language)
+                        emitAll(result.map { ApiResource.Success(it) })
+                    } catch (e: Exception) {
+                        Timber.e(e.message.toString())
+                        emit(ApiResource.Error(e.message.toString()))
+                    }
                 }
-            } catch (e: Exception) {
-                Timber.e(e.message.toString())
-                emit(ApiResource.Error(e.message.toString()))
             }
-        }
+    }
 }

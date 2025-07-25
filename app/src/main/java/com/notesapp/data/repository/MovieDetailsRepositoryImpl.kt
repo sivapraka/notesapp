@@ -11,17 +11,14 @@ class MovieDetailsRepositoryImpl(
     private val api: ImdbApi,
 ) : MovieDetailsRepository {
     override fun downloadDetails(movieId: Int, language: String): Flow<ImdbMoviesDetails?> = flow {
-        val response = api.movieDetails(movieId, language)
-        moviesDetailsDao.insertDetails(response)
-        emit(response)
-       /* val cacheDetails = moviesDetailsDao.getMovieDetails(movieId).firstOrNull()
+        val cacheDetails = moviesDetailsDao.getMovieDetails(movieId).firstOrNull()
         if (cacheDetails != null) {
             emit(cacheDetails)
         } else {
             val response = api.movieDetails(movieId, language)
             moviesDetailsDao.insertDetails(response)
-            emit(response)
-        }*/
+            emit(moviesDetailsDao.getMovieDetails(movieId).firstOrNull())
+        }
     }
 
 
