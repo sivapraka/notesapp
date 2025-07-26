@@ -23,6 +23,7 @@ import com.notesapp.data.repository.MovieDetailsRepositoryImpl
 import com.notesapp.data.repository.MovieRepositoryImpl
 import com.notesapp.data.repository.MovieVideosRepositoryImpl
 import com.notesapp.data.repository.NoteRepositoryImpl
+import com.notesapp.data.repository.SeatRepositoryImpl
 import com.notesapp.data.repository.TimezoneRepositoryImpl
 import com.notesapp.data.repository.UserSettingsRepositoryImpl
 import com.notesapp.domain.repository.AppUpdateRepository
@@ -32,6 +33,7 @@ import com.notesapp.domain.repository.MovieDetailsRepository
 import com.notesapp.domain.repository.MovieRepository
 import com.notesapp.domain.repository.MovieVideosRepository
 import com.notesapp.domain.repository.NoteRepository
+import com.notesapp.domain.repository.SeatRepository
 import com.notesapp.domain.repository.TimezoneRepository
 import com.notesapp.domain.repository.UserSettingsRepository
 import com.notesapp.domain.usecase.AddNotesUseCase
@@ -227,4 +229,8 @@ object AppModule {
         return AppUpdateRepositoryImpl(appUpdateManager)
     }
 
+    @Provides
+    fun provideSeatRepository(): SeatRepository {
+        return SeatRepositoryImpl()
+    }
 }

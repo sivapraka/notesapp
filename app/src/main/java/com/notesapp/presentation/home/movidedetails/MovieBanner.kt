@@ -45,9 +45,9 @@ fun MovieBanner(backdropUrl: String, posterUrl: String) {
 
 
 @Composable
-fun BookButton() {
+fun BookButton(onClicked:() -> Unit) {
     Button(
-        onClick = { /* Navigate to booking flow */ },
+        onClick = onClicked,
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)

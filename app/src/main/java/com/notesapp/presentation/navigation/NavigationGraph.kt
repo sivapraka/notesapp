@@ -1,6 +1,7 @@
 package com.notesapp.presentation.navigation
 
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -13,6 +14,7 @@ import com.notesapp.presentation.home.MovieListScreen
 import com.notesapp.presentation.home.movidedetails.MovieDetailScreen
 import com.notesapp.presentation.profile.ProfileRoute
 import com.notesapp.presentation.profile.ProfileScreen
+import com.notesapp.presentation.seatselection.SeatSelectionScreen
 import com.notesapp.presentation.theatre.TheatreScreen
 
 
@@ -34,7 +36,33 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
             arguments = listOf(navArgument("movieId") { type = NavType.IntType })
         ) { backStackEntry ->
             val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
-            MovieDetailScreen(movieId = movieId)
+            MovieDetailScreen(movieId = movieId,navController)
         }
+
+        // Seat Selection Screen
+        composable(
+            route = "seatSelection/{movieId}/{theatreId}/{showId}",
+            arguments = listOf(
+                navArgument("movieId") { type = NavType.IntType },
+                navArgument("theatreId") { type = NavType.StringType },
+                navArgument("showId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+            val theatreId = backStackEntry.arguments?.getString("theatreId").orEmpty()
+            val showId = backStackEntry.arguments?.getString("showId").orEmpty()
+
+            Log.e("TAG", "NavigationGraph: SeatSelectionScreen called with movieId=$movieId, theatreId=$theatreId, showId=$showId")
+
+            SeatSelectionScreen(
+                movieId = movieId,
+                theatreId = theatreId,
+                showId = showId,
+                onBuyTicketClick = {
+                    // TODO: Handle post-booking logic (e.g., show success dialog or navigate to bookings)
+                }
+            )
+        }
+
     }
 }
