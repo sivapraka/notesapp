@@ -1,5 +1,6 @@
 package com.notesapp.presentation.seatselection
 
+import android.R
 import android.annotation.SuppressLint
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +20,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.notesapp.data.local.entity.MovieTimes
 import com.notesapp.domain.model.Seat
 import com.notesapp.domain.model.SeatCategory
-import com.notesapp.domain.model.SeatLayout
 import com.notesapp.domain.model.SeatLayout1
 import com.notesapp.domain.model.SeatStatus
 import java.time.LocalDate
@@ -39,6 +40,7 @@ fun SeatSelectionScreen(
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     val context = LocalContext.current
     val upcomingDates = remember { (0..3).map { LocalDate.now().plusDays(it.toLong()) } }
+    val selectedTime = rememberSaveable { mutableStateOf<String?>(null) }
     val today = LocalDate.now()
     val maxDate = today.plusWeeks(1)
     // Initial load of seat layout
@@ -53,7 +55,7 @@ fun SeatSelectionScreen(
             .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally) {
 
-      //  ScreenArc()
+        ScreenArc()
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -150,7 +152,7 @@ fun SeatSelectionScreen(
                 MovieTimes(time = "8:45 PM"),
                 MovieTimes(time = "9:30 PM")
             )
-            MovieTime(movieList)
+            MovieTime(movieList,selectedTime)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -161,7 +163,12 @@ fun SeatSelectionScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text("${uiState.selectedSeats.size} Seats")
+                Text(
+                    text = "Selected: ${uiState.selectedSeats.size} / ${viewModel.maxSeatSelection} Seats",
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    style = MaterialTheme.typography.bodyLarge, color = Color.Black
+                )
                 Text(
                     text = "$ ${"%.2f".format(uiState.totalPrice)}",
                     style = MaterialTheme.typography.titleMedium

@@ -33,9 +33,14 @@ class GenericRemoteMediator<T : Any>(
             val remoteKey = remoteKeysDao.getRemoteKey(label)
             val page = when (loadType) {
                 LoadType.REFRESH -> {
-                    remoteKeysDao.getRemoteKey(label)
-                    clearDb()
-                    1
+                   val isDbEmpty = remoteKeysDao.count() == 0
+                    if (!isDbEmpty) {
+                        return MediatorResult.Success(endOfPaginationReached = false)
+                    }else {
+                        remoteKeysDao.getRemoteKey(label)
+                        clearDb()
+                        1
+                    }
                 }
 
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)

@@ -18,6 +18,9 @@ interface PageDao {
     @Query("SELECT * FROM pages WHERE label = :label")
     suspend fun getRemoteKey(label: String): PagesEntity?
 
+    @Query("SELECT COUNT(*) FROM pages")
+    suspend fun count(): Int
+
     @Query("DELETE FROM pages")
     suspend fun clearKeys()
 

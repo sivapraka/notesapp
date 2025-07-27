@@ -19,7 +19,7 @@ class SeatSelectionViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(SeatUiState())
     val uiState: StateFlow<SeatUiState> = _uiState.asStateFlow()
-    private val MAX_SELECTION_LIMIT = 6
+    val maxSeatSelection=5
     private var theatreId: String = ""
     private var showId: String = ""
     private var fullSeatLayout: SeatLayout? = null
@@ -35,15 +35,7 @@ class SeatSelectionViewModel @Inject constructor(
 
     fun onSeatClick(seatId: String) {
         viewModelScope.launch {
-            val seat = fullSeatLayout?.seats?.find { it.id == seatId } ?: return@launch
-            val selectedSeatsCount = fullSeatLayout?.seats?.count { it.status == SeatStatus.SELECTED } ?: 0
-
-            if (seat.status == SeatStatus.AVAILABLE && selectedSeatsCount >= MAX_SELECTION_LIMIT) {
-                // Limit reached — maybe show a toast/snackbar via side effect or emit error
-                return@launch
-            }
-
-            fullSeatLayout = toggleSeatSelectionUseCase(theatreId, showId, seatId)
+            fullSeatLayout = toggleSeatSelectionUseCase(theatreId, showId, seatId, maxSeatSelection)
             _uiState.value = buildUiState(fullSeatLayout!!)
         }
     }
