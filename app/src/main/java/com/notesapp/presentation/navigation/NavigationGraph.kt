@@ -22,7 +22,7 @@ import com.notesapp.presentation.theatre.TheatreScreen
 fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavItem.Home.route,
+        startDestination = BottomNavItem.Bookings.route,
         modifier = modifier
     ) {
         composable(BottomNavItem.Home.route) { HomeScreen() }

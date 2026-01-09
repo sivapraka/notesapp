@@ -48,7 +48,9 @@ fun SeatSelectionScreen(
         viewModel.loadSeats(theatreId, showId)
     }
 
-    Column(
+    SeatBookingScreen()
+
+/*    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.LightGray)
@@ -183,56 +185,7 @@ fun SeatSelectionScreen(
                 Text("Buy Ticket", color = Color.White)
             }
         }
-    }
+    }*/
 }
 
-
-
-@Composable
-fun SeatBookingScreen() {
-    var seatLayout by remember { mutableStateOf(generateSampleSeatLayout()) }
-
-    DynamicCurvedSeatLayout(seatLayout = seatLayout) { clickedSeat ->
-        seatLayout = seatLayout.copy(
-            seats = seatLayout.seats.map { row ->
-                row.map { seat ->
-                    if (seat.id == clickedSeat.id) {
-                        seat.copy(
-                            status = if (seat.status == SeatStatus.SELECTED) SeatStatus.AVAILABLE else SeatStatus.SELECTED
-                        )
-                    } else seat
-                }
-            }
-        )
-    }
-}
-
-
-fun generateSampleSeatLayout(): SeatLayout1
-{
-    val rows = 7
-    val seatLayout = mutableListOf<List<Seat>>()
-    val random = Random(System.currentTimeMillis())
-
-    for (row in 0 until rows) {
-        val columns = 5 + row * 2 // More seats per lower row for curve effect
-        val rowSeats = List(columns) { col ->
-            Seat(
-                id = "R$row-C$col",
-                row = row,
-                column = col,
-                status = SeatStatus.AVAILABLE,
-                category = SeatCategory.STANDARD,
-                price = 150f
-            )
-        }
-        seatLayout.add(rowSeats)
-    }
-
-    return SeatLayout1(
-        rows = rows,
-        columns = seatLayout.maxOf { it.size },
-        seats = seatLayout
-    )
-}
 

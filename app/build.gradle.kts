@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.notesapp"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.notesapp"
@@ -24,7 +24,9 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            // Enables resource shrinking.
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -32,11 +34,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         viewBinding = true
@@ -44,6 +43,14 @@ android {
         buildConfig=true
     }
 
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(
+            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+        )
+    }
 }
 
 dependencies {
@@ -57,6 +64,10 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+    implementation(libs.annotation)
+    implementation(libs.constraintlayout)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
@@ -97,4 +108,7 @@ dependencies {
     implementation(libs.timber)
     // Play Store -App-Update
     implementation (libs.app.update)
+    // Work Manager
+    implementation(libs.work.runtime.ktx)
+    implementation(libs.hilt.work)
 }

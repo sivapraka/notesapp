@@ -10,9 +10,8 @@ sealed class BottomNavItem(
     val icon: ImageVector,
     val title: String
 ) {
-
     object Home : BottomNavItem("home", Icons.Default.Home, "Movies")
     object Theatre : BottomNavItem("theatre", Icons.Default.LocationOn, "Theatres")
-    object Bookings : BottomNavItem("bookings", Icons.Default.Build, "Bookings")
+    object Bookings : BottomNavItem("events", Icons.Default.Build, "Events")
     object Profile : BottomNavItem("profile", Icons.Default.Person, "Profile")
 }
